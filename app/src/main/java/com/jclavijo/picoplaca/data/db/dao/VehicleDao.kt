@@ -1,10 +1,7 @@
-package com.jclavijo.picoplaca.data.db.dao
+package com.jclavijo.picoplaca.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.jclavijo.picoplaca.data.model.VehicleEntity
+import androidx.room.*
+import com.jclavijo.picoplaca.data.db.VehicleEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,9 +10,12 @@ interface VehicleDao {
     @Query("SELECT * FROM vehicles")
     fun getAll(): Flow<List<VehicleEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(vehicle: VehicleEntity)
 
-    @Query("DELETE FROM vehicles WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    @Update
+    suspend fun update(vehicle: VehicleEntity)
+
+    @Delete
+    suspend fun delete(vehicle: VehicleEntity)
 }

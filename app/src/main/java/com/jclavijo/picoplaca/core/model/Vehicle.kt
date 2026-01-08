@@ -1,6 +1,7 @@
 package com.jclavijo.picoplaca.core.model
 
 data class Vehicle(
+    val id: Long = 0,
     val plate: String,
-    val lastDigit: Int
+    val isActive: Boolean = true
 )
