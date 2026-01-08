@@ -1,16 +1,28 @@
 package com.jclavijo.picoplaca.core.engine
 
-import java.time.DayOfWeek
+import com.jclavijo.picoplaca.core.model.PicoPlacaRule
+import java.time.LocalDateTime
 
 class PicoPlacaEngine(
-    private val rules: Map<DayOfWeek, Set<Int>>
+    private val rules: List<PicoPlacaRule>
 ) {
 
-    fun appliesToday(
-        plateLastDigit: Int,
-        today: DayOfWeek
+    fun isRestricted(
+        plate: String,
+        dateTime: LocalDateTime
     ): Boolean {
-        val restrictedDigits = rules[today] ?: return false
-        return restrictedDigits.contains(plateLastDigit)
+
+        val lastDigit = plate.last().digitToIntOrNull() ?: return false
+        val day = dateTime.dayOfWeek.value
+        val minutes = dateTime.hour * 60 + dateTime.minute
+
+        val todayRules = rules.filter { it.dayOfWeek == day }
+
+        return todayRules.any { rule ->
+            lastDigit in rule.restrictedLastDigits &&
+                    rule.windows.any { window ->
+                        minutes in window.startMinutes..window.endMinutes
+                    }
+        }
     }
 }
