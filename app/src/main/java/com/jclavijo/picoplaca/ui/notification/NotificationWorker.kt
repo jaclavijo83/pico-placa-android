@@ -16,6 +16,7 @@ class NotificationWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        Log.d("NotificationWorker", "Worker ejecutado")
         showNotification()
         return Result.success()
     }
