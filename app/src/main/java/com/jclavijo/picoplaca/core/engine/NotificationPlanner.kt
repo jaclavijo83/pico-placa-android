@@ -16,13 +16,18 @@ class NotificationPlanner(
         from: LocalDateTime
     ): List<NotificationEvent> {
 
-        val lastDigit = plate.last().digitToIntOrNull() ?: return emptyList()
+        val lastDigit = plate.lastOrNull()?.digitToIntOrNull()
+            ?: return emptyList()
+
         val events = mutableListOf<NotificationEvent>()
 
         rules.forEach { rule ->
-            if (lastDigit !in rule.restrictedLastDigits) return@forEach
+            if (!rule.restrictedLastDigits.contains(lastDigit)) return@forEach
 
-            val nextDate = nextDateForDay(rule.dayOfWeek, from.toLocalDate())
+            val nextDate = nextDateForDay(
+                rule.dayOfWeek,
+                from.toLocalDate()
+            )
 
             rule.windows.forEach { window ->
                 val startTime = LocalTime.of(
