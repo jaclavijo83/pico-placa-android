@@ -1,19 +1,26 @@
 package com.jclavijo.picoplaca.notifications
 
 import android.content.Context
-import android.util.Log
-import androidx.work.*
-import com.jclavijo.picoplaca.ui.notification.NotificationWorker
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import java.time.Duration
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
-class NotificationScheduler(private val context: Context) {
+object NotificationScheduler {
 
-    fun scheduleTestNotification() {
+    fun schedule(
+        context: Context,
+        notifyAt: LocalDateTime
+    ) {
+        val delay = Duration.between(LocalDateTime.now(), notifyAt)
+
+        if (delay.isNegative || delay.isZero) return
+
         val request = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInitialDelay(5, TimeUnit.SECONDS)
+            .setInitialDelay(delay.toMillis(), TimeUnit.MILLISECONDS)
             .build()
 
         WorkManager.getInstance(context).enqueue(request)
-        Log.d("NotificationScheduler", "Agendando worker")
     }
 }

@@ -1,5 +1,6 @@
 package com.jclavijo.picoplaca.ui
 
+import com.jclavijo.picoplaca.ui.MainViewModel
 import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -25,7 +26,7 @@ fun MainScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            viewModel.scheduleNotification()
+            viewModel.scheduleNotifications()
         }
     }
 
@@ -33,7 +34,7 @@ fun MainScreen(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         } else {
-            viewModel.scheduleNotification()
+            viewModel.scheduleNotifications()
         }
     }
 

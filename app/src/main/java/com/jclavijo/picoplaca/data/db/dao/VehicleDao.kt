@@ -1,4 +1,4 @@
-package com.jclavijo.picoplaca.data.dao
+package com.jclavijo.picoplaca.data.db.dao
 
 import androidx.room.*
 import com.jclavijo.picoplaca.data.db.VehicleEntity
@@ -9,6 +9,9 @@ interface VehicleDao {
 
     @Query("SELECT * FROM vehicles")
     fun getAll(): Flow<List<VehicleEntity>>
+
+    @Query("SELECT * FROM vehicles")
+    suspend fun getAllOnce(): List<VehicleEntity>
 
     @Insert
     suspend fun insert(vehicle: VehicleEntity)
